@@ -1,29 +1,30 @@
 ﻿using Microsoft.Win32;
+using RegLib.Value;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RegLib
+namespace RegLib.Key
 {
     public class RegKey
     {
         private readonly RegistryKey _key;
 
-        public RegKeyCollection SubKeys
+        public RegKeyCollection SubRegKeys
         {
             get
             {
                 string[] subKeys = _key.GetSubKeyNames();
-                List<RegKey> keys = new List<RegKey>();
+                RegKeyCollection keys = new RegKeyCollection();
 
                 foreach (var subKey in subKeys)
                 {
                     keys.Add(_key.OpenSubKey(subKey));
                 }
 
-                return new RegKeyCollection(keys.AsEnumerable());
+                return keys;
             }
         }
 
@@ -35,20 +36,20 @@ namespace RegLib
             }
         }
 
-        public KeyValuePair<string, object>[] ValueNamePairs
+        public RegValueCollection RegValues
         {
             get
             {
                 string[] valueNames = _key.GetValueNames();
-                List<KeyValuePair<string, object>> kvps = new List<KeyValuePair<string, object>>();
+                RegValueCollection values = new RegValueCollection();
 
                 foreach (var valueName in valueNames)
                 {
                     var value = _key.GetValue(valueName);
-                    kvps.Add(new KeyValuePair<string, object>(valueName, value));
+                    values.Add(new RegValue(valueName, value));
                 }
 
-                return kvps.ToArray();
+                return values;
             }
         }
 
@@ -64,9 +65,9 @@ namespace RegLib
 
         public RegKey FindSubKeyByValueName(string valueName)
         {
-            foreach (var key in SubKeys)
+            foreach (var key in SubRegKeys)
             {
-                if (key.ValueNamePairs.Any(x => x.Key == valueName)) return key;
+                if (key.RegValues.Any(x => x.Name == valueName)) return key;
             }
 
             return null;
@@ -74,10 +75,10 @@ namespace RegLib
 
         public RegKey[] FindSubKeysByValueName(string valueName)
         {
-            return SubKeys.Aggregate(
+            return SubRegKeys.Aggregate(
                 new List<RegKey>(),
                 (list, subKey) => {
-                    if (subKey.ValueNamePairs.Any(vnp => vnp.Key == valueName)) list.Add(subKey);
+                    if (subKey.RegValues.Any(vnp => vnp.Name == valueName)) list.Add(subKey);
                     return list;
                 }).ToArray();
         }
