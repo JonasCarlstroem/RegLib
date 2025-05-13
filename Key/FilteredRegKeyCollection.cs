@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace RegLib.Key
 {
-    public class FilteredRegKeyCollection : FilteredRegBaseCollection<RegKey>
+    public class FilteredRegKeyCollection : FilteredRegBaseCollectionTemp<RegKey>
     {
         public FilteredRegKeyCollection(RegKeyCollection source, Func<RegKey, bool> predicate)
             : base(source, predicate) { }
 
         public override IEnumerator<RegKey> GetEnumerator()
         {
-            return new FilteredRegKeyEnumerator(_source, _filteredIndices)
+            return new FilteredRegKeyEnumerator(_source, _filteredIndices);
         } 
     }
     //public class FilteredRegKeyCollection : IReadOnlyList<RegKey>

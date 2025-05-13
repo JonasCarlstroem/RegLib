@@ -8,17 +8,53 @@ using System.Threading.Tasks;
 namespace RegLib
 {
     public abstract class FilteredRegBaseCollection<T, TCollection> : IReadOnlyList<T>
-        where TCollection : 
+        where TCollection : RegBaseCollection<T>
     {
-        private protected readonly RegBaseCollection<T> _source;
+        private protected readonly TCollection _source;
         private protected readonly List<int> _filteredIndices;
 
-        public FilteredRegBaseCollection(RegBaseCollection<T> source, Func<T, bool> predicate)
+        public FilteredRegBaseCollection(TCollection source, Func<T, bool> predicate)
         {
             _source = source;
             _filteredIndices = new List<int>();
 
             for(int i = 0; i < _source.Count; i++)
+            {
+                var item = _source[i];
+                if (predicate(item))
+                    _filteredIndices.Add(i);
+            }
+        }
+
+        public T this[int index]
+        {
+            get
+            {
+                if (index < 0 || index >= _filteredIndices.Count)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+
+                return _source[_filteredIndices[index]];
+            }
+        }
+
+        public int Count => _filteredIndices.Count;
+
+        public abstract IEnumerator<T> GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
+
+    public abstract class FilteredRegBaseCollectionTemp<T> : IReadOnlyList<T>
+    {
+        private protected readonly RegBaseCollection<T> _source;
+        private protected readonly List<int> _filteredIndices;
+
+        public FilteredRegBaseCollectionTemp(RegBaseCollection<T> source, Func<T, bool> predicate)
+        {
+            _source = source;
+            _filteredIndices = new List<int>();
+
+            for (int i = 0; i < _source.Count; i++)
             {
                 var item = _source[i];
                 if (predicate(item))
