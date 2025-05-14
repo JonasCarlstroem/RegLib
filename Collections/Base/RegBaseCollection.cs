@@ -1,13 +1,12 @@
-﻿using System;
+﻿using RegLib.Elements;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace RegLib
+namespace RegLib.Collections.Base
 {
     public abstract class RegBaseCollection<T> : ICollection<T>
+        where T : IRegElement
     {
         private protected T[] _items = Array.Empty<T>();
         private int _count = 0;

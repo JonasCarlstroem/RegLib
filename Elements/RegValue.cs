@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RegLib.Value
+namespace RegLib.Elements
 {
-    public class RegValue
+    public class RegValue : IRegElement
     {
         public string Name { get; set; }
         public object Value { get; set; }

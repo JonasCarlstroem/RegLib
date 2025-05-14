@@ -42,21 +42,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FilteredRegBaseCollection.cs" />
-    <Compile Include="FilteredRegBaseEnumerator.cs" />
-    <Compile Include="Key\FilteredRegKeyEnumerator.cs" />
-    <Compile Include="Key\RegKeyEnumerator.cs" />
-    <Compile Include="RegBaseCollection.cs" />
-    <Compile Include="RegBaseEnumerator.cs" />
-    <Compile Include="Key\FilteredRegKeyCollection.cs" />
+    <Compile Include="Collections\Base\FilteredRegBaseCollection.cs" />
+    <Compile Include="Collections\Base\FilteredRegBaseEnumerator.cs" />
+    <Compile Include="Elements\IRegElement.cs" />
+    <Compile Include="Collections\Base\RegBaseCollection.cs" />
+    <Compile Include="Collections\Base\RegBaseEnumerator.cs" />
+    <Compile Include="Collections\FilteredRegKeyCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Key\RegKey.cs" />
-    <Compile Include="Key\RegKeyCollection.cs" />
-    <Compile Include="Value\FilteredRegValueCollection.cs" />
-    <Compile Include="Value\FilteredRegValueEnumerator.cs" />
-    <Compile Include="Value\RegValue.cs" />
-    <Compile Include="Value\RegValueCollection.cs" />
-    <Compile Include="Value\RegValueEnumerator.cs" />
+    <Compile Include="Elements\RegKey.cs" />
+    <Compile Include="Collections\RegKeyCollection.cs" />
+    <Compile Include="Collections\FilteredRegValueCollection.cs" />
+    <Compile Include="Elements\RegValue.cs" />
+    <Compile Include="Collections\RegValueCollection.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

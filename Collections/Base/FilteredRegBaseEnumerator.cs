@@ -1,13 +1,15 @@
-﻿using System;
+﻿using RegLib.Elements;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RegLib
+namespace RegLib.Collections.Base
 {
     public class FilteredRegBaseEnumerator<T> : IEnumerator<T>
+        where T : IRegElement
     {
         private readonly RegBaseCollection<T> _source;
         private readonly List<int> _filteredIndices;

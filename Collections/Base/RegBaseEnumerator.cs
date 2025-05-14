@@ -1,13 +1,15 @@
-﻿using System;
+﻿using RegLib.Elements;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RegLib
+namespace RegLib.Collections.Base
 {
     public abstract class RegBaseEnumerator<T> : IEnumerator<T>
+        where T : IRegElement
     {
         private readonly T[] _items;
         private readonly int _count;
