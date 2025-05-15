@@ -9,8 +9,20 @@ using System.Threading.Tasks;
 
 namespace RegLib.Collections
 {
-    public class RegKeyCollection<T> : RegBaseCollection<T>
-        where T : RegKey
+    public interface IRegKeyCollection<out T> : IEnumerable<T>
+        where T : ReadOnlyRegKey
+    {
+        int Count { get; }
+        T FindByName(string name);
+        T FindByValueName(string valueName);
+        T FindByValue(object value);
+
+        ReadOnlyRegKeyCollection AsReadOnly();
+        WritableRegKeyCollection AsWritable();
+    }
+
+    public class RegKeyCollection<T> : RegBaseCollection<T>, IRegKeyCollection<T>
+        where T : ReadOnlyRegKey
     {
         public RegKeyCollection()
             : base() { }
@@ -28,7 +40,7 @@ namespace RegLib.Collections
             return Filter(predicate);
         }
 
-        public T FindKeyByName(string name)
+        public T FindByName(string name)
         {
             if (string.IsNullOrEmpty(name)) return null;
 
@@ -40,6 +52,33 @@ namespace RegLib.Collections
 
             return null;
         }
+
+        public T FindByValueName(string valueName)
+        {
+            if (string.IsNullOrEmpty(valueName)) return null;
+
+            foreach(var key in this)
+            {
+                if (key.RegValues.Any(rv => rv.Name.Equals(valueName, StringComparison.OrdinalIgnoreCase))) return key;
+            }
+
+            return null;
+        }
+
+        public T FindByValue(object value)
+        {
+            if (value == null) return null;
+
+            foreach(var key in this)
+            {
+                if (key.RegValues.Any(rv => rv.Value.Equals(value))) return key;
+            }
+
+            return null;
+        }
+
+        public ReadOnlyRegKeyCollection AsReadOnly() => new ReadOnlyRegKeyCollection(_items.Cast<ReadOnlyRegKey>());
+        public WritableRegKeyCollection AsWritable() => new WritableRegKeyCollection(_items.Cast<WritableRegKey>());
 
         public override IEnumerator<T> GetEnumerator()
         {

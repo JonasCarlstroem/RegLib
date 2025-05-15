@@ -9,32 +9,39 @@ using System.Threading.Tasks;
 
 namespace RegLib.Collections
 {
-    public class RegValueCollection : RegBaseCollection<RegValue>
+    public interface IRegValueCollection<out T> : IEnumerable<T>
+        where T : ReadOnlyRegValue
+    {
+        int Count { get; }
+
+    }
+
+    public class RegValueCollection : RegBaseCollection<ReadOnlyRegValue>
     {
         public RegValueCollection()
             : base() { }
 
-        public RegValueCollection(IEnumerable<RegValue> values) 
+        public RegValueCollection(IEnumerable<ReadOnlyRegValue> values) 
             : base(values) { }
 
-        public FilteredRegValueCollection Filter(Func<RegValue, bool> predicate)
+        public FilteredRegValueCollection Filter(Func<ReadOnlyRegValue, bool> predicate)
         {
             return new FilteredRegValueCollection(this, predicate);
         }
 
-        public FilteredRegValueCollection Where(Func<RegValue, bool> predicate)
+        public FilteredRegValueCollection Where(Func<ReadOnlyRegValue, bool> predicate)
         {
             return Filter(predicate);
         }
 
-        public override IEnumerator<RegValue> GetEnumerator()
+        public override IEnumerator<ReadOnlyRegValue> GetEnumerator()
         {
             return new RegValueEnumerator(_items, Count);
         }
 
-        public class RegValueEnumerator : RegBaseEnumerator<RegValue>
+        public class RegValueEnumerator : RegBaseEnumerator<ReadOnlyRegValue>
         {
-            public RegValueEnumerator(RegValue[] items, int count)
+            public RegValueEnumerator(ReadOnlyRegValue[] items, int count)
                 : base(items, count) { }
         }
     }

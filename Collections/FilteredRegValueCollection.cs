@@ -8,17 +8,17 @@ using System.Threading.Tasks;
 
 namespace RegLib.Collections
 {
-    public class FilteredRegValueCollection : FilteredRegBaseCollection<RegValue, RegValueCollection>
+    public class FilteredRegValueCollection : FilteredRegBaseCollection<ReadOnlyRegValue, RegValueCollection>
     {
-        public FilteredRegValueCollection(RegValueCollection source, Func<RegValue, bool> predicate)
+        public FilteredRegValueCollection(RegValueCollection source, Func<ReadOnlyRegValue, bool> predicate)
             : base(source, predicate) { }
 
-        public override IEnumerator<RegValue> GetEnumerator()
+        public override IEnumerator<ReadOnlyRegValue> GetEnumerator()
         {
             return new FilteredRegValueEnumerator(_source, _filteredIndices);
         }
 
-        public class FilteredRegValueEnumerator : FilteredRegBaseEnumerator<RegValue>
+        public class FilteredRegValueEnumerator : FilteredRegBaseEnumerator<ReadOnlyRegValue>
         {
             public FilteredRegValueEnumerator(RegValueCollection source, List<int> filteredIndices)
                 : base(source, filteredIndices) { }

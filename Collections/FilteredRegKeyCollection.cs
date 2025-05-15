@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace RegLib.Collections
 {
     public class FilteredRegKeyCollection<T> : FilteredRegBaseCollection<T, RegKeyCollection<T>>
-        where T : RegKey
+        where T : ReadOnlyRegKey
     {
         public FilteredRegKeyCollection(RegKeyCollection<T> source, Func<T, bool> predicate)
             : base(source, predicate) { }

@@ -8,8 +8,10 @@ using System.Threading.Tasks;
 
 namespace RegLib.Elements
 {
-    public class WritableRegKey : RegKey
+    public class WritableRegKey : ReadOnlyRegKey
     {
+        public new WritableRegKeyCollection SubKeys => GetWritableSubKeys();
+
         public WritableRegKey(RegistryKey key) 
             : base(key)
         {
@@ -40,11 +42,11 @@ namespace RegLib.Elements
             return newKey != null ? new WritableRegKey(newKey) : null;
         }
 
-        protected override RegKeyCollection GetSubKeys()
+        private WritableRegKeyCollection GetWritableSubKeys()
         {
-            RegKeyCollection keys = new RegKeyCollection();
+            WritableRegKeyCollection keys = new WritableRegKeyCollection();
 
-            foreach(var name in _key.GetSubKeyNames())
+            foreach (var name in _key.GetSubKeyNames())
             {
                 var sub = _key.OpenSubKey(name, true);
                 if (sub != null)
