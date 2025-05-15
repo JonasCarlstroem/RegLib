@@ -9,19 +9,21 @@ using System.Threading.Tasks;
 
 namespace RegLib.Collections
 {
-    public class FilteredRegKeyCollection : FilteredRegBaseCollection<RegKey, RegKeyCollection>
+    public class FilteredRegKeyCollection<T> : FilteredRegBaseCollection<T, RegKeyCollection<T>>
+        where T : RegKey
     {
-        public FilteredRegKeyCollection(RegKeyCollection source, Func<RegKey, bool> predicate)
+        public FilteredRegKeyCollection(RegKeyCollection<T> source, Func<T, bool> predicate)
             : base(source, predicate) { }
 
-        public override IEnumerator<RegKey> GetEnumerator()
+        public override IEnumerator<T> GetEnumerator()
         {
-            return new FilteredRegKeyEnumerator(_source, _filteredIndices);
+            return new FilteredRegKeyEnumerator<T>(_source, _filteredIndices);
         }
 
-        internal class FilteredRegKeyEnumerator : FilteredRegBaseEnumerator<RegKey>
+        internal class FilteredRegKeyEnumerator<U> : FilteredRegBaseEnumerator<U>
+            where U : T
         {
-            public FilteredRegKeyEnumerator(RegKeyCollection source, List<int> filteredIndices)
+            public FilteredRegKeyEnumerator(RegKeyCollection<U> source, List<int> filteredIndices)
                 : base(source, filteredIndices) { }
         }
     }

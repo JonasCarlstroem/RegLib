@@ -9,32 +9,46 @@ using System.Threading.Tasks;
 
 namespace RegLib.Collections
 {
-    public class RegKeyCollection : RegBaseCollection<RegKey>
+    public class RegKeyCollection<T> : RegBaseCollection<T>
+        where T : RegKey
     {
         public RegKeyCollection()
             : base() { }
 
-        public RegKeyCollection(IEnumerable<RegKey> keys)
+        public RegKeyCollection(IEnumerable<T> keys)
             : base(keys) { }
 
-        public FilteredRegKeyCollection Filter(Func<RegKey, bool> predicate)
+        public FilteredRegKeyCollection<T> Filter(Func<T, bool> predicate)
         {
-            return new FilteredRegKeyCollection(this, predicate);
+            return new FilteredRegKeyCollection<T>(this, predicate);
         }
 
-        public FilteredRegKeyCollection Where(Func<RegKey, bool> predicate)
+        public FilteredRegKeyCollection<T> Where(Func<T, bool> predicate)
         {
             return Filter(predicate);
         }
 
-        public override IEnumerator<RegKey> GetEnumerator()
+        public T FindKeyByName(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return null;
+
+            foreach (var key in this)
+            {
+                if (string.Equals(key.Name, name, StringComparison.OrdinalIgnoreCase))
+                    return key;
+            }
+
+            return null;
+        }
+
+        public override IEnumerator<T> GetEnumerator()
         {
             return new RegKeyEnumerator(_items, Count);
         }
 
-        internal class RegKeyEnumerator : RegBaseEnumerator<RegKey>
+        internal class RegKeyEnumerator : RegBaseEnumerator<T>
         {
-            public RegKeyEnumerator(RegKey[] items, int count)
+            public RegKeyEnumerator(T[] items, int count)
                 : base(items, count) { }
         }
     }

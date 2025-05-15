@@ -3,12 +3,15 @@ using RegLib.Collections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace RegLib.Elements
 {
-    public class RegKey : IRegElement
+    public abstract class RegKey : IRegElement, IDisposable
     {
-        private readonly RegistryKey _key;
+        private static readonly Dictionary<Type, ConstructorInfo> _ctorCache = new Dictionary<Type, ConstructorInfo>();
+        private protected readonly RegistryKey _key;
         private readonly RegPath _path;
 
         public string Hive => _path.StartNode;
@@ -17,41 +20,11 @@ namespace RegLib.Elements
 
         public int SubKeyCount => _key.SubKeyCount;
 
-        public RegKeyCollection SubKeys
-        {
-            get
-            {
-                RegKeyCollection keys = new RegKeyCollection();
-
-                foreach (var name in _key.GetSubKeyNames())
-                {
-                    var sub = _key.OpenSubKey(name);
-                    if (sub != null)
-                        keys.Add(sub);
-                }
-
-                return keys;
-            }
-        }
+        public RegKeyCollection SubKeys => GetSubKeys();
 
         public int ValueCount => _key.ValueCount;
 
-        public RegValueCollection RegValues
-        {
-            get
-            {
-                string[] valueNames = _key.GetValueNames();
-                RegValueCollection values = new RegValueCollection();
-
-                foreach (var valueName in valueNames)
-                {
-                    var value = _key.GetValue(valueName);
-                    values.Add(new RegValue(valueName, value));
-                }
-
-                return values;
-            }
-        }
+        public RegValueCollection RegValues => GetRegValues();
 
         public RegPath Path => _path;
 
@@ -61,7 +34,8 @@ namespace RegLib.Elements
             _path = new RegPath(key.Name.Split('\\'));
         }
 
-        public RegKey GetSubKey(params string[] paths)
+        private T GetKey<T>(Func<RegistryKey, T> factory, params string[] paths)
+            where T : RegKey
         {
             RegistryKey current = _key;
 
@@ -71,7 +45,24 @@ namespace RegLib.Elements
                 current = current.OpenSubKey(segment);
             }
 
-            return current == null ? null : new RegKey(current);
+            if (current == null) return null;
+
+            return factory(current);
+        }
+
+        public RegKey GetSubKey(params string[] paths)
+        {
+            return GetKey(key => new ReadOnlyRegKey(key), paths);
+        }
+
+        public WritableRegKey GetWritableSubKey(params string[] paths)
+        {
+            return GetKey(key => new WritableRegKey(key), paths);
+        }
+
+        public RegKey FindSubKeyByName(string name)
+        {
+            return SubKeys.FirstOrDefault(k => k.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
 
         public RegKey FindSubKeyByValueName(string valueName)
@@ -84,17 +75,43 @@ namespace RegLib.Elements
             return null;
         }
 
-        public RegKey[] FindSubKeysByValueName(string valueName)
+        public RegKeyCollection FindSubKeysByValueName(string valueName)
         {
-            return SubKeys.Aggregate(
-                new List<RegKey>(),
-                (list, subKey) => {
-                    if (subKey.RegValues.Any(vnp => vnp.Name == valueName)) list.Add(subKey);
-                    return list;
-                }).ToArray();
+            RegKeyCollection keys = new RegKeyCollection();
+
+            foreach(var key in SubKeys)
+            {
+                if (key.RegValues.Any(rv => rv.Name.Equals(valueName, StringComparison.OrdinalIgnoreCase)))
+                    keys.Add(key);
+            }
+
+            return keys;
         }
 
-        public static implicit operator RegKey(RegistryKey key) => new RegKey(key);
+        public virtual object GetValue(string name) => _key.GetValue(name);
+
+        protected abstract RegKeyCollection GetSubKeys();
+
+        protected virtual RegValueCollection GetRegValues()
+        {
+            string[] valueNames = _key.GetValueNames();
+            RegValueCollection values = new RegValueCollection();
+
+            foreach (var valueName in valueNames)
+            {
+                var value = _key.GetValue(valueName);
+                values.Add(new RegValue(valueName, value));
+            }
+
+            return values;
+        }
+
+        public void Dispose()
+        {
+            _key.Dispose();
+        }
+
+        public static implicit operator RegKey(RegistryKey key) => new ReadOnlyRegKey(key);
     }
 
     public readonly struct RegPath

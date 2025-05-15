@@ -17,6 +17,16 @@ namespace RegLib.Collections
         public RegValueCollection(IEnumerable<RegValue> values) 
             : base(values) { }
 
+        public FilteredRegValueCollection Filter(Func<RegValue, bool> predicate)
+        {
+            return new FilteredRegValueCollection(this, predicate);
+        }
+
+        public FilteredRegValueCollection Where(Func<RegValue, bool> predicate)
+        {
+            return Filter(predicate);
+        }
+
         public override IEnumerator<RegValue> GetEnumerator()
         {
             return new RegValueEnumerator(_items, Count);
