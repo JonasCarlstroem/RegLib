@@ -1,5 +1,6 @@
 ﻿using RegLib.Collections.Base;
 using RegLib.Elements;
+using RegLib.Prototypes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,39 +10,27 @@ using System.Threading.Tasks;
 
 namespace RegLib.Collections
 {
-    public interface IRegValueCollection<out T> : IEnumerable<T>
-        where T : ReadOnlyRegValue
-    {
-        int Count { get; }
-
-    }
-
-    public class RegValueCollection : RegBaseCollection<ReadOnlyRegValue>
+    public class RegValueCollection : RegBaseCollection<RegValue>
     {
         public RegValueCollection()
             : base() { }
 
-        public RegValueCollection(IEnumerable<ReadOnlyRegValue> values) 
+        public RegValueCollection(IEnumerable<RegValue> values) 
             : base(values) { }
 
-        public FilteredRegValueCollection Filter(Func<ReadOnlyRegValue, bool> predicate)
+        public FilteredRegValueCollection Filter(Func<RegValue, bool> predicate)
         {
             return new FilteredRegValueCollection(this, predicate);
         }
 
-        public FilteredRegValueCollection Where(Func<ReadOnlyRegValue, bool> predicate)
-        {
-            return Filter(predicate);
-        }
-
-        public override IEnumerator<ReadOnlyRegValue> GetEnumerator()
+        public override IEnumerator<RegValue> GetEnumerator()
         {
             return new RegValueEnumerator(_items, Count);
         }
 
-        public class RegValueEnumerator : RegBaseEnumerator<ReadOnlyRegValue>
+        public class RegValueEnumerator : RegBaseEnumerator<RegValue>
         {
-            public RegValueEnumerator(ReadOnlyRegValue[] items, int count)
+            public RegValueEnumerator(RegValue[] items, int count)
                 : base(items, count) { }
         }
     }

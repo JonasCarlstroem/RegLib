@@ -1,11 +1,12 @@
 ﻿using Microsoft.Win32;
+using RegLib.Elements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RegLib.Elements
+namespace RegLib.Prototypes
 {
     public class ReadOnlyRegValue : IRegElement
     {
@@ -17,7 +18,7 @@ namespace RegLib.Elements
         public RegistryValueKind Kind => _getKind();
 
         internal ReadOnlyRegValue(
-            string name, 
+            string name,
             Func<string, object> getValue,
             Func<string, RegistryValueKind> getKind)
         {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RegLib.Elements
+namespace RegLib.Prototypes
 {
     public class WritableRegValue : ReadOnlyRegValue
     {
@@ -17,10 +17,10 @@ namespace RegLib.Elements
             Func<string, object> getValue,
             Func<string, RegistryValueKind> getKind,
             Action<string, object> setValue,
-            Action<string> deleteValue) 
-            : base(name, getValue, getKind) 
+            Action<string> deleteValue)
+            : base(name, getValue, getKind)
         {
-            _setValue = (object obj) => setValue(name, obj);
+            _setValue = (obj) => setValue(name, obj);
             _deleteValue = () => deleteValue(name);
         }
 

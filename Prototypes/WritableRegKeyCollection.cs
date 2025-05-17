@@ -1,15 +1,15 @@
-﻿using RegLib.Elements;
+﻿using RegLib.Collections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RegLib.Collections
+namespace RegLib.Prototypes
 {
-    public class WritableRegKeyCollection : RegKeyCollection<WritableRegKey>
+    public class WritableRegKeyCollection : RegKeyCollection
     {
-        public WritableRegKeyCollection() 
+        public WritableRegKeyCollection()
             : base() { }
 
         public WritableRegKeyCollection(IEnumerable<WritableRegKey> keys)

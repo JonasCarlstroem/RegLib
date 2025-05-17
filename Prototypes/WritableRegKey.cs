@@ -1,23 +1,23 @@
 ﻿using Microsoft.Win32;
-using RegLib.Collections;
+using RegLib.Elements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RegLib.Elements
+namespace RegLib.Prototypes
 {
-    public class WritableRegKey : ReadOnlyRegKey
+    public class WritableRegKey : RegKey
     {
         public new WritableRegKeyCollection SubKeys => GetWritableSubKeys();
 
-        public WritableRegKey(RegistryKey key) 
+        public WritableRegKey(RegistryKey key)
             : base(key)
         {
-            if(!key.GetAccessControl().AreAccessRulesProtected)
+            if (!key.GetAccessControl().AreAccessRulesProtected)
             {
-                
+
             }
         }
 

@@ -124,35 +124,4 @@ namespace RegLib.Collections.Base
             return GetEnumerator();
         }
     }
-
-    //public abstract class BaseCollectionEnumerator<T> : IEnumerator<T>
-    //{
-    //    private readonly T[] _items;
-    //    private readonly int _count;
-    //    private int _index;
-    //    private readonly Func<T, bool> _predicate;
-
-    //    public BaseCollectionEnumerator(T[] items, int count)
-    //    {
-    //        _items = items;
-    //        _count = count;
-    //        _predicate = null;
-    //        _index = -1;
-    //    }
-
-    //    public BaseCollectionEnumerator(T[] items, int count, Func<T, bool> predicate)
-    //    {
-    //        _items = items;
-    //        _count = count;
-    //        _predicate = predicate;
-    //        _index = -1;
-    //    }
-
-    //    public T Current => _items[_index];
-    //    object IEnumerator.Current => Current;
-
-    //    public virtual bool MoveNext() => ++_index < _count;
-    //    public virtual void Reset() => _index = -1;
-    //    public virtual void Dispose() { }
-    //}
 }
