@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace RegLib.Collections
 {
-    public interface IRegKeyCollection : ICollection<IRegKey>
+    public interface IRegKeyCollection
     {
         IRegKey FindSubKeyBy(Func<IRegKey, bool> predicate, bool recurse = false);
         IRegKeyCollection FindSubKeysBy(Func<IRegKey, bool> predicate, bool recurse = false);

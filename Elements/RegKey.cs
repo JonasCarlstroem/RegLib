@@ -17,7 +17,7 @@ namespace RegLib.Elements
 
         public int SubKeyCount => _key.SubKeyCount;
 
-        public virtual RegKeyCollection SubKeys => GetSubKeys();
+        public RegKeyCollection SubKeys => GetSubKeys();
 
         public int RegValueCount => _key.ValueCount;
 
@@ -25,14 +25,17 @@ namespace RegLib.Elements
 
         public RegPath Path => _path;
 
-        IRegKeyCollection IRegKey.SubKeys => throw new NotImplementedException();
-
-        IRegValueCollection IRegKey.RegValues => throw new NotImplementedException();
+        IRegKeyCollection IRegKey.SubKeys => SubKeys;
 
         internal RegKey(RegistryKey key)
         {
             _key = key ?? throw new ArgumentNullException(nameof(key));
             _path = new RegPath(key.Name.Split('\\'));
+        }
+
+        public bool DeleteKey()
+        {
+            
         }
 
         public RegKey GetSubKey(params string[] paths)
@@ -50,7 +53,7 @@ namespace RegLib.Elements
             return current;
         }
 
-        public virtual RegValue GetValue(string name, bool writable = false) 
+        public RegValue GetValue(string name, bool writable = false) 
             => string.IsNullOrEmpty(name) 
             ? null 
             : new RegValue(
@@ -61,6 +64,15 @@ namespace RegLib.Elements
                 writable ? _key.SetValue : (Action<string, object>)null,
                 writable ? _key.DeleteValue : (Action<string>)null
             );
+
+        public RegKey CreateSubKey(string subkey, bool writable = false)
+            => _key.CreateSubKey(subkey, writable);
+
+        public void DeleteSubKey(string subkey)
+            => _key.DeleteSubKey(subkey, true);
+
+        public void DeleteSubKeyTree(string subkey)
+            => _key.DeleteSubKeyTree(subkey, true);
 
         protected virtual RegKeyCollection GetSubKeys()
         {

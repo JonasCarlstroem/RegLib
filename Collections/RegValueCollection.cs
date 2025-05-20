@@ -10,12 +10,7 @@ using System.Threading.Tasks;
 
 namespace RegLib.Collections
 {
-    public interface IRegValueCollection : ICollection<IRegValue>
-    {
-
-    }
-
-    public partial class RegValueCollection : RegBaseCollection<RegValue>, IRegValueCollection
+    public partial class RegValueCollection : RegBaseCollection<RegValue>
     {
         public RegValueCollection()
             : base() { }

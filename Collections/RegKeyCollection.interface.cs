@@ -10,35 +10,35 @@ namespace RegLib.Collections
 {
     public partial class RegKeyCollection
     {
-        void ICollection<IRegKey>.Add(IRegKey item)
-        {
-            if (item is RegKey rk)
-                Add(rk);
-            else
-                throw new ArgumentException("Only RegKey instances are supported.");
-        }
+        //void ICollection<IRegKey>.Add(IRegKey item)
+        //{
+        //    if (item is RegKey rk)
+        //        Add(rk);
+        //    else
+        //        throw new ArgumentException("Only RegKey instances are supported.");
+        //}
 
-        bool ICollection<IRegKey>.Contains(IRegKey item)
-            => item is RegKey rk && Contains(rk);
+        //bool ICollection<IRegKey>.Contains(IRegKey item)
+        //    => item is RegKey rk && Contains(rk);
 
-        void ICollection<IRegKey>.CopyTo(IRegKey[] array, int arrayIndex)
-        {
-            if (array == null) throw new ArgumentNullException(nameof(array));
-            if (arrayIndex < 0 || arrayIndex > array.Length) throw new ArgumentOutOfRangeException(nameof(arrayIndex));
-            if (array.Length - arrayIndex < Count) throw new ArgumentException("Not enough space in array.");
+        //void ICollection<IRegKey>.CopyTo(IRegKey[] array, int arrayIndex)
+        //{
+        //    if (array == null) throw new ArgumentNullException(nameof(array));
+        //    if (arrayIndex < 0 || arrayIndex > array.Length) throw new ArgumentOutOfRangeException(nameof(arrayIndex));
+        //    if (array.Length - arrayIndex < Count) throw new ArgumentException("Not enough space in array.");
 
-            for (int i = 0; i < Count; i++)
-                array[arrayIndex + i] = this[i];
-        }
+        //    for (int i = 0; i < Count; i++)
+        //        array[arrayIndex + i] = this[i];
+        //}
 
-        bool ICollection<IRegKey>.Remove(IRegKey item)
-            => item is RegKey rk && Remove(rk);
+        //bool ICollection<IRegKey>.Remove(IRegKey item)
+        //    => item is RegKey rk && Remove(rk);
 
-        IEnumerator<IRegKey> IEnumerable<IRegKey>.GetEnumerator()
-        {
-            foreach (var key in this)
-                yield return key;
-        }
+        //IEnumerator<IRegKey> IEnumerable<IRegKey>.GetEnumerator()
+        //{
+        //    foreach (var key in this)
+        //        yield return key;
+        //}
 
         IRegKey IRegKeyCollection.FindSubKeyBy(Func<IRegKey, bool> predicate, bool recurse)
             => FindSubKeyBy(predicate, recurse);

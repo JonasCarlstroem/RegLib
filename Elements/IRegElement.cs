@@ -17,10 +17,14 @@ namespace RegLib.Elements
         int RegValueCount { get; }
 
         IRegKeyCollection SubKeys { get; }
-        IRegValueCollection RegValues { get; }
+        RegValueCollection RegValues { get; }
 
+        bool DeleteKey();
         IRegKey GetSubKey(params string[] paths);
         IRegValue GetValue(string name, bool writable = false);
+        IRegKey CreateSubKey(string subkey, bool writable = false);
+        void DeleteSubKey(string subkey);
+        void DeleteSubKeyTree(string subkey);
     }
 
     public interface IRegValue : IRegElement

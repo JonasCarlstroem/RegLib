@@ -13,5 +13,14 @@ namespace RegLib.Elements
 
         IRegValue IRegKey.GetValue(string name, bool writable)
             => GetValue(name, writable);
+
+        IRegKey IRegKey.CreateSubKey(string subkey, bool writable)
+            => CreateSubKey(subkey, writable);
+
+        void IRegKey.DeleteSubKey(string subkey)
+            => DeleteSubKey(subkey);
+
+        void IRegKey.DeleteSubKeyTree(string subkey)
+            => DeleteSubKeyTree(subkey);
     }
 }
