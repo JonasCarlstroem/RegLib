@@ -16,17 +16,20 @@ namespace RegLib.Elements
         int SubKeyCount { get; }
         int RegValueCount { get; }
 
-        RegKeyCollection SubKeys { get; }
-        RegValueCollection RegValues { get; }
+        IRegKeyCollection SubKeys { get; }
+        IRegValueCollection RegValues { get; }
 
-        RegKey GetSubKey(params string[] paths);
-        RegValue GetValue(string name, bool writable = false);
+        IRegKey GetSubKey(params string[] paths);
+        IRegValue GetValue(string name, bool writable = false);
     }
 
     public interface IRegValue : IRegElement
     {
         object Value { get; }
         RegistryValueKind Kind { get; }
+        bool IsDefault { get; }
+
+        IRegKey Owner { get; }
 
         void SetValue(object obj);
         void DeleteValue();

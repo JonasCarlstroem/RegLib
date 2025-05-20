@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace RegLib.Elements
 {
-    public class RegKey : IRegKey
+    public partial class RegKey : IRegKey
     {
         private protected readonly RegistryKey _key;
         private readonly RegPath _path;
@@ -25,7 +25,11 @@ namespace RegLib.Elements
 
         public RegPath Path => _path;
 
-        public RegKey(RegistryKey key)
+        IRegKeyCollection IRegKey.SubKeys => throw new NotImplementedException();
+
+        IRegValueCollection IRegKey.RegValues => throw new NotImplementedException();
+
+        internal RegKey(RegistryKey key)
         {
             _key = key ?? throw new ArgumentNullException(nameof(key));
             _path = new RegPath(key.Name.Split('\\'));
@@ -50,6 +54,7 @@ namespace RegLib.Elements
             => string.IsNullOrEmpty(name) 
             ? null 
             : new RegValue(
+                this,
                 name,
                 _key.GetValue,
                 _key.GetValueKind,
@@ -81,6 +86,7 @@ namespace RegLib.Elements
                 var kind = _key.GetValueKind(valueName);
                 values.Add(
                     new RegValue(
+                        this,
                         valueName,
                         _key.GetValue,
                         _key.GetValueKind
@@ -98,6 +104,13 @@ namespace RegLib.Elements
 
         public static implicit operator RegKey(RegistryKey key) => new RegKey(key);
         public static implicit operator RegistryKey(RegKey key) => key._key;
+
+        public static RegKey LocalMachine => Registry.LocalMachine;
+        public static RegKey CurrentUser => Registry.CurrentUser;
+        public static RegKey ClassesRoot => Registry.ClassesRoot;
+        public static RegKey Users => Registry.Users;
+        public static RegKey PerformanceData => Registry.PerformanceData;
+        public static RegKey CurrentConfig => Registry.CurrentConfig;
     }
 
     public readonly struct RegPath

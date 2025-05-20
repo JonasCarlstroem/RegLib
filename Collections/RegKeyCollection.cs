@@ -1,6 +1,8 @@
 ﻿using Microsoft.Win32;
+using RegLib.Collections;
 using RegLib.Collections.Base;
 using RegLib.Elements;
+using RegLib.Types;
 using System;
 using System.CodeDom;
 using System.Collections;
@@ -14,15 +16,21 @@ using System.Threading.Tasks;
 
 namespace RegLib.Collections
 {
-    public enum StringMatch
+    public interface IRegKeyCollection : ICollection<IRegKey>
     {
-        Exact,
-        Contains,
-        StartsWith,
-        EndsWith
+        IRegKey FindSubKeyBy(Func<IRegKey, bool> predicate, bool recurse = false);
+        IRegKeyCollection FindSubKeysBy(Func<IRegKey, bool> predicate, bool recurse = false);
+        IRegKey FindSubKeyByName(string name, bool recurse = false, StringMatch mode = StringMatch.Exact);
+        IRegKeyCollection FindSubKeysByName(string name, bool recurse = false, StringMatch mode = StringMatch.Exact);
+        IRegKey FindSubKeyByValueName(string valueName, bool recurse = false, StringMatch mode = StringMatch.Exact);
+        IRegKeyCollection FindSubKeysByValueName(string valueName, bool recurse = false, StringMatch mode = StringMatch.Exact);
+        IRegKey FindSubKeyByValue(object value, bool recurse = false, StringMatch mode = StringMatch.Exact);
+        IRegKey FindSubKeyByValue<T>(T value, bool recurse = false, StringMatch mode = StringMatch.Exact);
+        IRegKeyCollection FindSubKeysByValue(object value, bool recurse = false, StringMatch mode = StringMatch.Exact);
+        IRegKeyCollection FindSubKeysByValue<T>(T value, bool recurse = false, StringMatch mode = StringMatch.Exact);
     }
 
-    public class RegKeyCollection : RegBaseCollection<RegKey>
+    public partial class RegKeyCollection : RegBaseCollection<RegKey>, IRegKeyCollection
     {
         public RegKeyCollection()
             : base() { }
